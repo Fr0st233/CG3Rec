@@ -1,0 +1,70 @@
+# Overwritting configs
+metadata: sentence
+
+# Config the sentence embedding model
+#   Sentence T5
+sent_emb_model: sentence-transformers/sentence-t5-base
+sent_emb_dim: 768
+sent_emb_pca: 128
+
+#   OpenAI Embedding Model
+# sent_emb_model: text-embedding-3-large
+# sent_emb_dim: 3072
+# sent_emb_pca: 512
+# openai_api_key: 
+
+
+sent_emb_batch_size: 512
+
+# Config for the backbone model
+max_item_seq_len: 50
+n_embd: 448
+n_layer: 2
+n_head: 4
+n_inner: 1024
+activation_function: gelu_new
+resid_pdrop: 0.0
+embd_pdrop: 0.5
+attn_pdrop: 0.5
+layer_norm_epsilon: 1e-12
+initializer_range: 0.02
+
+# Semantic ID configs
+n_codebook: 32
+codebook_size: 256
+opq_use_gpu: False
+opq_gpu_id: 0
+faiss_omp_num_threads: 32
+
+# RPG configs
+#   model
+temperature: 0.07
+num_beams: 50
+n_edges: 50
+propagation_steps: 3
+#   decoding graph construction
+chunk_size: 1024
+num_workers: 64
+
+
+# CG3Rec configs
+#  graph construction
+collab_matrix_type: ppmi       # ppmi (default) | cooc (raw co-occurrence matrix ablation)
+graph_type: undirected         # undirected | directed (undirected: a↔b bidirectional cooc, directed: a→b forward transitions only)
+cooc_window_size: 1            # max positional distance for co-occurrence edges; shared by CSID and GALS
+
+#  Graph-Enhenced Tokenization (GET)
+collab_emb_dim: 0                # 0 = disabled; >0 = SVD dimension for collab embeddings
+collab_emb_weight: 0         # fusion weight: [sem*(1-w), collab*w] concat
+collab_emb_source: svd         # svd | pretrained
+pretrained_item_emb_path: '~'    # when collab_emb_source=pretrained, path to item vectors (.npy/.npz/.pt/.pth)
+
+
+#  Graph-Aware Label Smoothing (GALS)
+use_graph_smoothing: True
+label_smooth_mode: graph   # graph (original GALS) | global (alpha uniform over non-target tokens)
+label_smooth_alpha: 0     # smoothing strength (0 = hard CE)
+label_smooth_neighbors: 0  # co-occurrence neighbors per item
+
+
+
